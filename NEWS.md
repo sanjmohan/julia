@@ -172,6 +172,14 @@ This section lists changes that do not have deprecation warnings.
     of the output was shrunk to fit the union of the type of each element in the input.
     ([#22696])
 
+  * `transpose` and `transpose!` no longer recursively transpose the elements of the
+    container. Similarly, `RowVector` no longer provides a transposed view of the elements.
+    Transposition now simply rearranges the elements of containers of data, such as arrays
+    of strings. Note that the renamed `adjoint` method (formerly `ctranspose`) does still
+    act in a recursive manner, and that (very occassionally) `conj(adjoint(...))` will be
+    preferrable to `transpose` for linear algebra problems using nested arrays as "block
+    matrices". ([#23424])
+
 Library improvements
 --------------------
 
