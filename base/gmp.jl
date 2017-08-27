@@ -43,11 +43,11 @@ else
 end
 
 """
-    BigInt <: Integer
+    BigInt <: Signed
 
 Arbitrary precision integer type.
 """
-mutable struct BigInt <: Integer
+mutable struct BigInt <: Signed
     alloc::Cint
     size::Cint
     d::Ptr{Limb}
@@ -316,7 +316,7 @@ rem(x::BigInt, ::Type{Bool}) = !iszero(x) & unsafe_load(x.d) % Bool # never unsa
 rem(x::BigInt, ::Type{T}) where T<:Union{SLimbMax,ULimbMax} =
     iszero(x) ? zero(T) : flipsign(unsafe_load(x.d) % T, x.size)
 
-function rem(x::BigInt, ::Type{T}) where T<:Union{Unsigned,Signed}
+function rem(x::BigInt, ::Type{T}) where T<:Union{Base.BitUnsigned,Base.BitSigned}
     u = zero(T)
     for l = 1:min(abs(x.size), cld(sizeof(T), sizeof(Limb)))
         u += (unsafe_load(x.d, l) % T) << ((sizeof(Limb)<<3)*(l-1))
