@@ -232,6 +232,7 @@ widen(::Type{BigInt})  = BigInt
 signed(x::BigInt) = x
 
 convert(::Type{BigInt}, x::BigInt) = x
+convert(::Type{Signed}, x::BigInt) = x
 
 hastypemax(::Type{BigInt}) = false
 
@@ -326,7 +327,7 @@ end
 
 rem(x::Integer, ::Type{BigInt}) = convert(BigInt, x)
 
-function convert(::Type{T}, x::BigInt) where T<:Unsigned
+function convert(::Type{T}, x::BigInt) where T<:Base.BitUnsigned
     if sizeof(T) < sizeof(Limb)
         convert(T, convert(Limb,x))
     else
@@ -335,7 +336,7 @@ function convert(::Type{T}, x::BigInt) where T<:Unsigned
     end
 end
 
-function convert(::Type{T}, x::BigInt) where T<:Signed
+function convert(::Type{T}, x::BigInt) where T<:Base.BitSigned
     n = abs(x.size)
     if sizeof(T) < sizeof(Limb)
         SLimb = typeof(Signed(one(Limb)))
